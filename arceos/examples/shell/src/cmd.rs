@@ -1,7 +1,6 @@
-use std::fs::{self, File, FileType};
+use std::fs::{self, rename, DirEntry, File, FileType};
 use std::io::{self, prelude::*};
 use std::{string::String, vec::Vec};
-
 #[cfg(all(not(feature = "axstd"), unix))]
 use std::os::unix::fs::{FileTypeExt, PermissionsExt};
 
@@ -27,6 +26,8 @@ const CMD_TABLE: &[(&str, CmdHandler)] = &[
     ("pwd", do_pwd),
     ("rm", do_rm),
     ("uname", do_uname),
+    ("rename", do_rename),
+    ("mv",do_mv),
 ];
 
 fn file_type_to_char(ty: FileType) -> char {
@@ -258,6 +259,42 @@ fn do_uname(_args: &str) {
         arch = arch,
         plat = platform,
     );
+}
+
+fn do_rename(args: &str){
+    let args:Vec<&str> = args.split_whitespace().collect();
+    let from = args[0];
+    let dst = args[1];
+    let res = rename(from, dst);
+    if res.is_ok() {
+        println!("rename {} to {}",from,dst);
+    } else if let Err(e) = res {
+        println!("error:{}",e);
+    }
+}
+
+fn do_mv(args: &str) {
+    let args:Vec<&str> = args.split_whitespace().collect();
+    let from = args[0];
+    let to = args[1];
+    let dst_path:String;
+    if let Err(_) = File::create(to) {
+        dst_path = format!("/{}/{}",to.trim_matches('/'),from);
+    } else {
+        dst_path = String::from(to);
+    }
+    let mut  buffer = [0;4096];
+    let mut to_file = File::create(dst_path.as_str()).expect("err creating file");
+    let mut from_file = File::open(from).expect("err opening file");
+    let mut read_len;
+    loop {
+        read_len = from_file.read(&mut buffer).expect("err reading");
+        if read_len == 0 {
+            break;
+        }
+        to_file.write(&buffer[0..read_len]).expect("write err");
+    }
+    do_rm(from);
 }
 
 fn do_help(_args: &str) {

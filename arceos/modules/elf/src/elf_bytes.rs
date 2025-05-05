@@ -770,7 +770,7 @@ impl<'data, E: EndianParse> ElfBytes<'data, E> {
             self.ehdr.class,
             self.data.get_bytes(versym_start..versym_end)?,
         );
-
+        
         // Wrap the VERNEED section and strings data in an iterator and string table (if any)
         let verneeds = match needs_opt {
             Some(shdr) => {
