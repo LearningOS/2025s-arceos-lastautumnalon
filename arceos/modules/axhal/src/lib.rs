@@ -63,21 +63,7 @@ pub mod console {
     pub use super::platform::console::*;
     /// Write a slice of bytes to the console.
     pub fn write_bytes(bytes: &[u8]) {
-        // start color
-        putchar(0x1b);
-        let ctl = b"[35;103;6;1m";
-        for c in ctl {
-            putchar(*c);
-        }
-        
         for c in bytes {
-            putchar(*c);
-        }
-        
-        // end color
-        let ctl = b"[0m";
-        putchar(0x1b);
-        for c in ctl {
             putchar(*c);
         }
     }
