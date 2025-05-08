@@ -15,7 +15,7 @@ mod regs;
 mod csrs;
 mod sbi;
 mod loader;
-
+use std::println;
 use vcpu::VmCpuRegisters;
 use riscv::register::{scause, sstatus, stval};
 use csrs::defs::hstatus;
@@ -102,16 +102,22 @@ fn vmexit_handler(ctx: &mut VmCpuRegisters) -> bool {
             }
         },
         Trap::Exception(Exception::IllegalInstruction) => {
-            panic!("Bad instruction: {:#x} sepc: {:#x}",
+            println!("Bad instruction: {:#x} sepc: {:#x}",
                 stval::read(),
                 ctx.guest_regs.sepc
             );
+            ctx.guest_regs.sepc += 4;
+            ctx.guest_regs.gprs.set_reg(A0,0x6688);
+            return false
         },
         Trap::Exception(Exception::LoadGuestPageFault) => {
-            panic!("LoadGuestPageFault: stval{:#x} sepc: {:#x}",
+            println!("LoadGuestPageFault: stval{:#x} sepc: {:#x}",
                 stval::read(),
                 ctx.guest_regs.sepc
             );
+            ctx.guest_regs.sepc += 4;
+            ctx.guest_regs.gprs.set_reg(A1, 0x1234);
+            return false
         },
         _ => {
             panic!(
