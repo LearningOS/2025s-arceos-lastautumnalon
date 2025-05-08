@@ -18,7 +18,7 @@ make run A=exercises/sys_map/ BLK=y > $tmp_file 2>/dev/null
 
 output=$(grep -Ea "$grep_content" ./$tmp_file)
 
-rm -rf $tmp_file 
+# rm -rf $tmp_file 
 
 if [[ -z "$output" ]]; then
     echo "sys_mmap default"

@@ -12,7 +12,7 @@ mod backend;
 pub use self::aspace::AddrSpace;
 
 use axerrno::{AxError, AxResult};
-use axhal::mem::phys_to_virt;
+use axhal::{mem::phys_to_virt, paging::MappingFlags};
 use axhal::paging::PagingError;
 use kspin::SpinNoIrq;
 use lazyinit::LazyInit;

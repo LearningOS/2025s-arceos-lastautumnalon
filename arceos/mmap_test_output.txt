@@ -1,8 +1,8 @@
-    [92;1mBuilding[0m App: support_hashmap, Arch: riscv64, Platform: riscv64-qemu-virt, App type: rust
-[37mcargo -C exercises/support_hashmap/ build[0m [90m-Z unstable-options --target riscv64gc-unknown-none-elf --target-dir /home/rin/2025s-arceos-lastautumnalon/arceos/target --release  --features "axstd/log-level-warn"[0m
-[37mrust-objcopy --binary-architecture=riscv64[0m [90mexercises/support_hashmap//support_hashmap_riscv64-qemu-virt.elf --strip-all -O binary exercises/support_hashmap//support_hashmap_riscv64-qemu-virt.bin[0m
+    [92;1mBuilding[0m App: sys_map, Arch: riscv64, Platform: riscv64-qemu-virt, App type: rust
+[37mcargo -C exercises/sys_map/ build[0m [90m-Z unstable-options --target riscv64gc-unknown-none-elf --target-dir /home/rin/2025s-arceos-lastautumnalon/arceos/target --release  --features "axstd/log-level-warn"[0m
+[37mrust-objcopy --binary-architecture=riscv64[0m [90mexercises/sys_map//sys_map_riscv64-qemu-virt.elf --strip-all -O binary exercises/sys_map//sys_map_riscv64-qemu-virt.bin[0m
     [96;1mRunning[0m on qemu...
-[37mqemu-system-riscv64[0m [90m-m 128M -smp 1 -machine virt -bios default -kernel exercises/support_hashmap//support_hashmap_riscv64-qemu-virt.bin -drive if=pflash,file=/home/rin/2025s-arceos-lastautumnalon/arceos/pflash.img,format=raw,unit=1 -nographic[0m
+[37mqemu-system-riscv64[0m [90m-m 128M -smp 1 -machine virt -bios default -kernel exercises/sys_map//sys_map_riscv64-qemu-virt.bin -drive if=pflash,file=/home/rin/2025s-arceos-lastautumnalon/arceos/pflash.img,format=raw,unit=1 -device virtio-blk-pci,drive=disk0 -drive id=disk0,if=none,format=raw,file=disk.img -nographic[0m
 
 OpenSBI v1.0
    ____                    _____ ____ _____
@@ -65,6 +65,35 @@ smp = 1
 build_mode = release
 log_level = warn
 
-Running memory tests...
-test_hashmap() OK!
-Memory tests run OK!
+[37m[  0.100178 0 fatfs::dir:139] [31mIs a directory[m
+[m[37m[  0.111939 0 fatfs::dir:139] [31mIs a directory[m
+[m[37m[  0.126487 0 fatfs::dir:139] [31mIs a directory[m
+[m[37m[  0.143450 0 fatfs::dir:139] [31mIs a directory[m
+[mphdr: offset: 0x0=>0x0 size: 0x5FAC=>0x5FAC
+VA:0x0 - VA:0x6000
+phdr: offset: 0x6E70=>0x7E70 size: 0x340=>0x9B0
+VA:0x7000 - VA:0x9000
+entry: 0x526
+Mapping user stack: VA:0x3fffff0000 -> VA:0x4000000000
+New user address space: AddrSpace {
+    va_range: VA:0x0..VA:0x4000000000,
+    page_table_root: PA:0x8064d000,
+}
+handle_syscall [96] ...
+handle_syscall [29] ...
+Ignore SYS_IOCTL
+handle_syscall [66] ...
+MapFile ...
+handle_syscall [56] ...
+handle_syscall [64] ...
+handle_syscall [57] ...
+handle_syscall [56] ...
+handle_syscall [222] ...
+handle_syscall [66] ...
+Read back content: hello, arceos!
+handle_syscall [57] ...
+handle_syscall [66] ...
+MapFile ok!
+handle_syscall [94] ...
+[SYS_EXIT_GROUP]: system is exiting ..
+monolithic kernel exit [Some(0)] normally!
