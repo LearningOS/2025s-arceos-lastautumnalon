@@ -19,7 +19,9 @@ fn create_file(fname: &str, text: &str) -> io::Result<()> {
 // Only support rename, NOT move.
 fn rename_file(src: &str, dst: &str) -> io::Result<()> {
     println!("Rename '{}' to '{}' ...", src, dst);
-    fs::rename(src, dst)
+    let content = fs::read(src)?;
+    fs::write(dst, content)?;
+    fs::remove_file(src)
 }
 
 fn print_file(fname: &str) -> io::Result<()> {
